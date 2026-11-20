@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { MemoDetailView } from "@/components/memo-detail-view";
 import { getMemo } from "@/lib/memo-data";
 
 async function MemoDetail({ params }: PageProps<"/memos/[id]">) {
+  await connection(); // 현재 시각을 쓰므로 요청 때 그린다
   const { id } = await params;
   const memo = await getMemo(id, new Date());
 

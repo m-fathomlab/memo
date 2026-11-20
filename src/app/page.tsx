@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { Chip } from "@/components/chip";
 import { IconPlus } from "@/components/icons";
@@ -9,6 +10,7 @@ const categories = ["전체", "업무", "개인", "아이디어"];
 
 // 메모는 열 때마다 Supabase 에서 읽어 온다.
 async function HomeContent() {
+  await connection(); // 현재 시각을 쓰므로 빌드 때 미리 만들지 않고 요청 때 그린다
   const now = new Date();
   const memos = await getMemos(now);
 
