@@ -1,12 +1,13 @@
 import { getSupabase } from "./supabase";
-import type { Memo, MemoBlock, MemoColor } from "./memos";
+import type { Category, Member, Memo, MemoBlock, MemoColor } from "./memos";
 
 /** memos 표의 한 줄 */
 type MemoRow = {
   id: string;
   title: string;
   body: MemoBlock[];
-  category: Memo["category"];
+  category: string | null;
+  author: string | null;
   color: MemoColor;
   pinned: boolean;
   created_at: string;
@@ -84,20 +85,21 @@ function toMemo(row: MemoRow, now: Date): Memo {
     date: formatListDate(createdAt, now),
     dateTime: formatDateTime(createdAt),
     category: row.category,
+    author: row.author,
     color: row.color,
     pinned: row.pinned,
     body: row.body,
   };
 }
 
-/** 모든 메모, 최신순 */
+/** 모든 글, 최신순 */
 export async function getMemos(now: Date): Promise<Memo[]> {
   const { data, error } = await getSupabase()
     .from("memos")
     .select("*")
     .order("created_at", { ascending: false })
     .overrideTypes<MemoRow[], { merge: false }>();
-  if (error) throw new Error(`메모를 불러오지 못했어요: ${error.message}`);
+  if (error) throw new Error(`글을 불러오지 못했어요: ${error.message}`);
   return data.map((row) => toMemo(row, now));
 }
 
@@ -110,17 +112,105 @@ export async function getMemo(id: string, now: Date): Promise<Memo | null> {
     .select("*")
     .eq("id", id)
     .maybeSingle<MemoRow>();
-  if (error) throw new Error(`메모를 불러오지 못했어요: ${error.message}`);
+  if (error) throw new Error(`글을 불러오지 못했어요: ${error.message}`);
   return data ? toMemo(data, now) : null;
+}
+
+export async function updateMemo(
+  id: string,
+  input: { title: string; category: string | null; author: string | null; color: MemoColor; body: MemoBlock[] },
+): Promise<void> {
+  const { error } = await getSupabase().from("memos").update(input).eq("id", id);
+  if (error) throw new Error(`글을 수정하지 못했어요: ${error.message}`);
+}
+
+export async function setMemoPinned(id: string, pinned: boolean): Promise<void> {
+  const { error } = await getSupabase().from("memos").update({ pinned }).eq("id", id);
+  if (error) throw new Error(`글을 고정하지 못했어요: ${error.message}`);
+}
+
+/** 필터 목록, 만든 순서대로 */
+export async function getCategories(): Promise<Category[]> {
+  const { data, error } = await getSupabase()
+    .from("categories")
+    .select("id, name, color")
+    .order("created_at", { ascending: true })
+    .overrideTypes<Category[], { merge: false }>();
+  if (error) throw new Error(`분류를 불러오지 못했어요: ${error.message}`);
+  return data;
+}
+
+export class CategoryError extends Error {}
+
+export async function addCategory(name: string, color: MemoColor): Promise<void> {
+  const trimmed = name.trim();
+  if (!trimmed) throw new CategoryError("이름을 입력해 주세요.");
+  const { error } = await getSupabase().from("categories").insert({ name: trimmed, color });
+  if (error) {
+    if (error.code === "23505") throw new CategoryError("이미 있는 이름이에요.");
+    throw new Error(`분류를 만들지 못했어요: ${error.message}`);
+  }
+}
+
+/** 필터를 지운다. 그 분류의 메모는 지우지 않고 "분류 없음"으로 돌린다. */
+export async function deleteCategory(id: string, name: string): Promise<void> {
+  const supabase = getSupabase();
+  const moved = await supabase.from("memos").update({ category: null }).eq("category", name);
+  if (moved.error) throw new Error(`글을 옮기지 못했어요: ${moved.error.message}`);
+  const removed = await supabase.from("categories").delete().eq("id", id);
+  if (removed.error) throw new Error(`분류를 지우지 못했어요: ${removed.error.message}`);
+}
+
+/** 가족 이름 목록, 등록한 순서대로 */
+export async function getMembers(): Promise<Member[]> {
+  const { data, error } = await getSupabase()
+    .from("members")
+    .select("id, name")
+    .order("created_at", { ascending: true })
+    .overrideTypes<Member[], { merge: false }>();
+  if (error) throw new Error(`가족 목록을 불러오지 못했어요: ${error.message}`);
+  return data;
+}
+
+export async function addMember(name: string): Promise<void> {
+  const trimmed = name.trim();
+  if (!trimmed) throw new CategoryError("이름을 입력해 주세요.");
+  const { error } = await getSupabase().from("members").insert({ name: trimmed });
+  if (error) {
+    if (error.code === "23505") throw new CategoryError("이미 있는 이름이에요.");
+    throw new Error(`이름을 추가하지 못했어요: ${error.message}`);
+  }
+}
+
+/** 가족 이름을 지운다. 그 사람이 쓴 글은 지우지 않고 작성자만 비운다. */
+export async function deleteMember(id: string, name: string): Promise<void> {
+  const supabase = getSupabase();
+  const cleared = await supabase.from("memos").update({ author: null }).eq("author", name);
+  if (cleared.error) throw new Error(`글의 작성자를 비우지 못했어요: ${cleared.error.message}`);
+  const removed = await supabase.from("members").delete().eq("id", id);
+  if (removed.error) throw new Error(`이름을 지우지 못했어요: ${removed.error.message}`);
 }
 
 export async function insertMemo(input: {
   title: string;
-  category: Memo["category"];
+  category: string | null;
+  author: string | null;
   color: MemoColor;
   body: MemoBlock[];
 }): Promise<string> {
   const { data, error } = await getSupabase().from("memos").insert(input).select("id").single<{ id: string }>();
-  if (error) throw new Error(`메모를 저장하지 못했어요: ${error.message}`);
+  if (error) throw new Error(`글을 저장하지 못했어요: ${error.message}`);
   return data.id;
+}
+
+/** 글을 지운다. 되돌릴 수 없다. 고정된 글은 지우지 않는다. */
+export async function deleteMemo(id: string): Promise<void> {
+  const { data, error } = await getSupabase()
+    .from("memos")
+    .delete()
+    .eq("id", id)
+    .eq("pinned", false)
+    .select("id");
+  if (error) throw new Error(`글을 지우지 못했어요: ${error.message}`);
+  if (data.length === 0) throw new Error("고정된 글은 지울 수 없어요. 먼저 고정을 풀어 주세요.");
 }

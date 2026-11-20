@@ -33,6 +33,31 @@ export function IconPlus(props: IconProps) {
   );
 }
 
+export function IconEdit(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 20H8L19 9L15 5L4 16V20Z" {...stroke} />
+      <path d="M13 7L17 11" {...stroke} />
+    </Icon>
+  );
+}
+
+export function IconTrash(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M5 7H19M10 7V5H14V7M7 7L8 20H16L17 7M10 11V16M14 11V16" {...stroke} />
+    </Icon>
+  );
+}
+
+export function IconClose(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M6 6L18 18M18 6L6 18" {...stroke} />
+    </Icon>
+  );
+}
+
 export function IconChevronLeft(props: IconProps) {
   return (
     <Icon {...props}>

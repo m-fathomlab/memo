@@ -1,13 +1,13 @@
 "use client";
 
-import type { Memo, MemoColor } from "./memos";
+import type { MemoColor } from "./memos";
 
-// 메모는 Supabase 에 저장된다. 이 브라우저에는 쓰다 만 글(임시 저장)만 남는다.
+// 글은 Supabase 에 저장된다. 이 브라우저에는 쓰다 만 글(임시 저장)만 남는다.
 const DRAFT_KEY = "memo-app:draft";
 
 export type Draft = {
   title: string;
-  category: Memo["category"];
+  category: string | null;
   color: MemoColor;
   html: string;
 };
@@ -38,7 +38,7 @@ export function readDraft(): Draft | null {
     return {
       title: draft.title,
       html: draft.html,
-      category: draft.category ?? "개인",
+      category: draft.category === undefined ? null : draft.category,
       color: draft.color ?? "green",
     };
   } catch {
@@ -52,4 +52,15 @@ export function writeDraft(draft: Draft) {
 
 export function clearDraft() {
   writeStorage(DRAFT_KEY, null);
+}
+
+// 마지막에 고른 작성자를 이 브라우저에 기억해 둔다.
+const AUTHOR_KEY = "memo-app:author";
+
+export function readLastAuthor(): string | null {
+  return readStorage(AUTHOR_KEY);
+}
+
+export function writeLastAuthor(name: string | null) {
+  writeStorage(AUTHOR_KEY, name);
 }

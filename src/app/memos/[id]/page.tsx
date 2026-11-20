@@ -12,7 +12,7 @@ async function MemoDetail({ params }: PageProps<"/memos/[id]">) {
   if (!memo) {
     return (
       <div className="mx-auto flex min-h-dvh w-full max-w-[390px] flex-col items-center justify-center gap-space-16 px-space-16">
-        <p className="text-body-md text-text-secondary">메모를 찾을 수 없어요.</p>
+        <p className="text-body-md text-text-secondary">글을 찾을 수 없어요.</p>
         <Link href="/" className="text-label-md text-primary">
           홈으로 가기
         </Link>

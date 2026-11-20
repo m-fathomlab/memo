@@ -3,7 +3,7 @@ import type { Memo } from "@/lib/memos";
 import { IconNote } from "./icons";
 import { labelColor } from "./label-color";
 
-// Figma `Memo/Item` — 누르면 메모 상세로 이동한다.
+// Figma `Memo/Item` — 누르면 글 상세로 이동한다. 오른쪽에 날짜와 글쓴이가 보인다.
 export function MemoItem({ memo }: { memo: Memo }) {
   return (
     <Link
@@ -19,7 +19,10 @@ export function MemoItem({ memo }: { memo: Memo }) {
         <p className="truncate text-title-md text-text-primary">{memo.title}</p>
         <p className="truncate text-body-sm text-text-secondary">{memo.preview}</p>
       </div>
-      <p className="shrink-0 text-caption-sm text-text-muted">{memo.date}</p>
+      <div className="flex shrink-0 flex-col items-end gap-space-4 text-caption-sm text-text-muted">
+        <p>{memo.date}</p>
+        {memo.author && <p>{memo.author}</p>}
+      </div>
     </Link>
   );
 }

@@ -126,7 +126,7 @@ export function MemoEditor({
           suppressContentEditableWarning
           role="textbox"
           aria-multiline="true"
-          aria-label="메모 내용"
+          aria-label="글 내용"
           onInput={refresh}
           onKeyUp={refresh}
           onMouseUp={refresh}

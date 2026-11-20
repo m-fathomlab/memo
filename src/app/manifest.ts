@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "밍메모",
-    short_name: "밍메모",
-    description: "가볍게 쓰고 바로 찾는 메모 앱",
+    name: "우리집 게시판",
+    short_name: "우리집",
+    description: "우리 가족 공지와 전할 말",
     lang: "ko",
     start_url: "/",
     scope: "/",

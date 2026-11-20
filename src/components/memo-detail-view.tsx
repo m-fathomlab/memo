@@ -1,7 +1,8 @@
 import { Badge } from "@/components/badge";
-import { IconButton, IconLink } from "@/components/icon-button";
-import { IconChevronLeft, IconMore, IconPin, IconShare } from "@/components/icons";
-import { PrimaryButton } from "@/components/primary-button";
+import { DeleteButton } from "@/components/delete-button";
+import { IconLink } from "@/components/icon-button";
+import { IconChevronLeft, IconEdit } from "@/components/icons";
+import { PinButton } from "@/components/pin-button";
 import type { Memo, MemoBlock } from "@/lib/memos";
 
 // **굵게** 표시를 굵은 글씨로 바꾼다.
@@ -53,23 +54,19 @@ export function MemoDetailView({ memo }: { memo: Memo }) {
           <IconChevronLeft />
         </IconLink>
         <div className="flex">
-          <IconButton label="고정">
-            <IconPin />
-          </IconButton>
-          <IconButton label="공유">
-            <IconShare />
-          </IconButton>
-          <IconButton label="더보기">
-            <IconMore />
-          </IconButton>
+          <PinButton id={memo.id} pinned={memo.pinned} />
+          <IconLink label="수정하기" href={`/memos/${memo.id}/edit`}>
+            <IconEdit />
+          </IconLink>
+          <DeleteButton id={memo.id} title={memo.title} pinned={memo.pinned} />
         </div>
       </header>
 
       <main className="mt-space-16 flex-1">
         <article className="flex flex-col gap-space-12 rounded-xl bg-surface-card px-space-20 py-space-24">
           <div className="flex items-center gap-space-8">
-            <Badge label={memo.category} color={memo.color} />
-            <time className="text-caption-sm text-text-muted">{memo.dateTime}</time>
+            <Badge label={memo.category ?? "분류 없음"} color={memo.category ? memo.color : null} />
+            <time className="text-caption-sm text-text-muted">{memo.author ? `${memo.author} · ${memo.dateTime}` : memo.dateTime}</time>
           </div>
           <h1 className="text-heading-lg text-text-primary">{memo.title}</h1>
           <hr className="h-px border-0 bg-border-default" />
@@ -81,9 +78,7 @@ export function MemoDetailView({ memo }: { memo: Memo }) {
         </article>
       </main>
 
-      <div className="sticky bottom-0 bg-surface-page pt-space-16 pb-space-34">
-        <PrimaryButton label="수정하기" />
-      </div>
+      <div className="pb-space-34" />
     </div>
   );
 }

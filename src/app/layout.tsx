@@ -8,11 +8,11 @@ const notoSansKr = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: { default: "밍메모", template: "%s · 밍메모" },
-  description: "가볍게 쓰고 바로 찾는 메모 앱",
-  applicationName: "밍메모",
+  title: { default: "우리집 게시판", template: "%s · 우리집 게시판" },
+  description: "우리 가족 공지와 전할 말",
+  applicationName: "우리집 게시판",
   // iOS 홈 화면에 추가했을 때 주소창 없이 앱처럼 열린다
-  appleWebApp: { capable: true, title: "밍메모", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "우리집 게시판", statusBarStyle: "default" },
   formatDetection: { telephone: false },
 };
 

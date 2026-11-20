@@ -20,6 +20,12 @@
 | `label/orange-soft` | #FFF1E5 | #3A2817 |
 | `label/pink` | #E5397A | #FF6FA2 |
 | `label/pink-soft` | #FFEAF1 | #3B1D2A |
+| `label/purple` | #7B4FE0 | #A98BFF |
+| `label/purple-soft` | #F0EAFE | #271F40 |
+| `label/teal` | #0E9AA7 | #3CC8D4 |
+| `label/teal-soft` | #E0F6F8 | #12303A |
+| `label/yellow` | #B7791F | #F5C04A |
+| `label/yellow-soft` | #FFF6DB | #3A3017 |
 
 ## 간격 (Spacing)
 

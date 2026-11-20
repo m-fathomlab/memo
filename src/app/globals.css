@@ -25,6 +25,12 @@
   --label-orange-soft: #FFF1E5;
   --label-pink: #E5397A;
   --label-pink-soft: #FFEAF1;
+  --label-purple: #7B4FE0;
+  --label-purple-soft: #F0EAFE;
+  --label-teal: #0E9AA7;
+  --label-teal-soft: #E0F6F8;
+  --label-yellow: #B7791F;
+  --label-yellow-soft: #FFF6DB;
 
   /* 간격 */
   --space-4: 4px;
@@ -57,6 +63,12 @@
     --label-orange-soft: #3A2817;
     --label-pink: #FF6FA2;
     --label-pink-soft: #3B1D2A;
+    --label-purple: #A98BFF;
+    --label-purple-soft: #271F40;
+    --label-teal: #3CC8D4;
+    --label-teal-soft: #12303A;
+    --label-yellow: #F5C04A;
+    --label-yellow-soft: #3A3017;
   }
 }
 
@@ -140,6 +152,12 @@
   --color-label-orange-soft: var(--label-orange-soft);
   --color-label-pink: var(--label-pink);
   --color-label-pink-soft: var(--label-pink-soft);
+  --color-label-purple: var(--label-purple);
+  --color-label-purple-soft: var(--label-purple-soft);
+  --color-label-teal: var(--label-teal);
+  --color-label-teal-soft: var(--label-teal-soft);
+  --color-label-yellow: var(--label-yellow);
+  --color-label-yellow-soft: var(--label-yellow-soft);
 
   --spacing-space-4: var(--space-4);
   --spacing-space-8: var(--space-8);

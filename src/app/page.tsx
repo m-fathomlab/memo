@@ -1,37 +1,28 @@
 import { connection } from "next/server";
 import { Suspense } from "react";
-import { Chip } from "@/components/chip";
+import { HomeMemos } from "@/components/home-memos";
 import { IconPlus } from "@/components/icons";
-import { MemoLists } from "@/components/memo-lists";
 import { PrimaryButton } from "@/components/primary-button";
-import { formatToday, getMemos } from "@/lib/memo-data";
-
-const categories = ["전체", "업무", "개인", "아이디어"];
+import { formatToday, getCategories, getMemos } from "@/lib/memo-data";
 
 // 메모는 열 때마다 Supabase 에서 읽어 온다.
 async function HomeContent() {
   await connection(); // 현재 시각을 쓰므로 빌드 때 미리 만들지 않고 요청 때 그린다
   const now = new Date();
-  const memos = await getMemos(now);
+  const [memos, categories] = await Promise.all([getMemos(now), getCategories()]);
 
   return (
     <>
       <header className="flex flex-col gap-space-8 px-space-8">
         <p className="text-caption-md text-text-muted">{formatToday(now)}</p>
         <h1 className="text-heading-xl text-text-primary">
-          오늘까지 메모를
+          오늘까지 글이
           <br />
-          <span className="text-primary">{memos.length}개</span> 남겼어요
+          <span className="text-primary">{memos.length}개</span> 올라왔어요
         </h1>
       </header>
 
-      <nav aria-label="메모 분류" className="flex gap-space-8 px-space-12">
-        {categories.map((category) => (
-          <Chip key={category} label={category} selected={category === "전체"} />
-        ))}
-      </nav>
-
-      <MemoLists memos={memos} />
+      <HomeMemos memos={memos} categories={categories} />
     </>
   );
 }
@@ -46,7 +37,7 @@ export default function Home() {
       </main>
 
       <div className="sticky bottom-0 bg-surface-page pt-space-16 pb-space-34">
-        <PrimaryButton label="새 메모 쓰기" icon={<IconPlus size={20} />} href="/memos/new" />
+        <PrimaryButton label="새 글 쓰기" icon={<IconPlus size={20} />} href="/memos/new" />
       </div>
     </div>
   );
