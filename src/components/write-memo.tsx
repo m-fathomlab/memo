@@ -8,7 +8,8 @@ import { IconChevronLeft } from "@/components/icons";
 import { MemoEditor } from "@/components/memo-editor";
 import { PrimaryButton } from "@/components/primary-button";
 import { editorToBlocks } from "@/lib/editor-blocks";
-import { clearDraft, readDraft, saveMemo, writeDraft } from "@/lib/memo-store";
+import { insertMemo } from "@/lib/memo-data";
+import { clearDraft, readDraft, writeDraft } from "@/lib/memo-store";
 import type { Memo, MemoColor } from "@/lib/memos";
 
 const categories: Memo["category"][] = ["업무", "개인", "아이디어"];
@@ -32,6 +33,8 @@ export function WriteMemo() {
   const [color, setColor] = useState<MemoColor>("green");
   const [draftSaved, setDraftSaved] = useState(false);
   const [error, setError] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
   // 쓰다 만 글이 있으면 되살린다.
   useEffect(() => {
@@ -73,7 +76,8 @@ export function WriteMemo() {
     }, 400);
   }
 
-  function save() {
+  async function save() {
+    if (saving) return;
     const trimmed = title.trim();
     if (!trimmed) {
       setError(true);
@@ -82,7 +86,15 @@ export function WriteMemo() {
     }
     const body = editorRef.current ? editorToBlocks(editorRef.current) : [];
     clearTimeout(draftTimer.current);
-    saveMemo({ title: trimmed, category, color, body });
+    setSaving(true);
+    setSaveError(false);
+    try {
+      await insertMemo({ title: trimmed, category, color, body });
+    } catch {
+      setSaving(false);
+      setSaveError(true); // 임시 저장은 그대로 남겨 두어 글이 사라지지 않는다
+      return;
+    }
     clearDraft();
     router.push("/");
   }
@@ -164,7 +176,12 @@ export function WriteMemo() {
       </main>
 
       <div className="sticky bottom-0 bg-surface-page pt-space-16 pb-space-34">
-        <PrimaryButton label="저장하기" onClick={save} />
+        {saveError && (
+          <p role="alert" className="pb-space-12 text-center text-caption-sm text-label-pink">
+            저장하지 못했어요. 잠시 뒤 다시 눌러 주세요.
+          </p>
+        )}
+        <PrimaryButton label={saving ? "저장하는 중" : "저장하기"} onClick={save} />
       </div>
     </div>
   );

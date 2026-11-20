@@ -1,15 +1,11 @@
-"use client";
-
 import { CardHeader } from "@/components/card-header";
 import { MemoItem } from "@/components/memo-item";
-import { useSavedMemos } from "@/lib/memo-store";
-import { memos as sampleMemos } from "@/lib/memos";
+import type { Memo } from "@/lib/memos";
 
-// 홈의 두 카드. 이 브라우저에 저장한 메모는 "최근 메모" 맨 위에 보인다.
-export function MemoLists() {
-  const saved = useSavedMemos();
-  const pinned = sampleMemos.filter((memo) => memo.pinned);
-  const recent = [...saved, ...sampleMemos.filter((memo) => !memo.pinned)];
+// 홈의 두 카드. 고정한 메모와 나머지(최신순)를 나눠 보여준다.
+export function MemoLists({ memos }: { memos: Memo[] }) {
+  const pinned = memos.filter((memo) => memo.pinned);
+  const recent = memos.filter((memo) => !memo.pinned);
 
   return (
     <>
