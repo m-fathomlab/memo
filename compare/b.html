@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>메모 홈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #f2f4f6; }
+  body { font-family: 'Noto Sans KR', sans-serif; -webkit-font-smoothing: antialiased; color: #191f28; }
+  button { font: inherit; border: 0; background: none; color: inherit; cursor: pointer; }
+  svg { display: block; flex: none; }
+
+  .screen { position: relative; width: 100%; max-width: 390px; min-height: 844px; margin: 0 auto; background: #f2f4f6; padding: 64px 16px 34px; }
+
+  .date { padding-left: 8px; font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: -0.2px; color: #8b95a1; }
+  h1 { padding-left: 8px; margin-top: 8px; font-size: 28px; line-height: 38px; font-weight: 700; letter-spacing: -0.8px; }
+  h1 em { font-style: normal; color: #3182f6; }
+
+  .chips { display: flex; gap: 8px; margin: 16px 0 16px 4px; }
+  .chip { height: 36px; padding: 0; width: 60px; border-radius: 999px; background: #fff; color: #4e5968; font-size: 15px; line-height: 22px; font-weight: 700; letter-spacing: -0.2px; }
+  .chip.idea { width: 87px; }
+  .chip.on { background: #3182f6; color: #fff; }
+
+  .card { background: #fff; border-radius: 24px; padding: 21px 20px 0; margin-bottom: 16px; }
+  .card.pin { height: 200px; }
+  .card.recent { height: auto; padding-bottom: 0; }
+  .card.recent .row:last-child { height: 68px; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; height: 22px; margin-bottom: 17px; font-size: 15px; line-height: 22px; letter-spacing: -0.2px; }
+  .card-head .l { display: flex; align-items: center; gap: 4px; font-weight: 700; }
+  .card-head .more { display: flex; align-items: center; gap: 4px; font-weight: 500; color: #8b95a1; }
+
+  .row { position: relative; display: block; width: 100%; height: 72px; text-align: left; }
+  .ico { position: absolute; left: 0; top: 2px; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+  .title { position: absolute; left: 60px; top: 0; font-size: 17px; line-height: 24px; font-weight: 700; letter-spacing: -0.3px; color: #191f28; white-space: nowrap; }
+  .sub { position: absolute; left: 60px; top: 28px; font-size: 14px; line-height: 20px; font-weight: 400; letter-spacing: -0.1px; color: #4e5968; white-space: nowrap; }
+  .when { position: absolute; right: 0; top: 15px; font-size: 13px; line-height: 18px; font-weight: 500; color: #8b95a1; }
+  .row.long { height: auto; padding-bottom: 24px; }
+  .row.long .sub { position: static; display: block; margin: 28px 48px 0 60px; white-space: normal; }
+  .blue { background: #e8f3ff; } .green { background: #e3f8ec; } .pink { background: #ffeaf1; } .orange { background: #fff1e5; }
+
+  .cta { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 56px; margin-top: 12px; border-radius: 16px; background: #3182f6; color: #fff; font-size: 17px; line-height: 24px; font-weight: 700; letter-spacing: -0.2px; }
+</style>
+</head>
+<body>
+<div class="screen">
+  <p class="date">10월 30일 금요일</p>
+  <h1>오늘까지 메모를<br><em>128개</em> 남겼어요</h1>
+
+  <div class="chips">
+    <button class="chip on">전체</button>
+    <button class="chip">업무</button>
+    <button class="chip">개인</button>
+    <button class="chip idea">아이디어</button>
+  </div>
+
+  <section class="card pin">
+    <div class="card-head">
+      <span class="l">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 2.33333H10L9.4 5.8L11.3333 8H4.66667L6.6 5.8L6 2.33333Z" stroke="#3182F6" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8V13.3333" stroke="#3182F6" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        고정한 메모
+      </span>
+    </div>
+    <button class="row">
+      <span class="ico blue"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#3182F6" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66667H12.8333L16.5 7.33333V18.3333H6.41667V3.66667Z"/><path d="M12.8333 3.66667V7.33333H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></svg></span>
+      <span class="title">디자인 리뷰 회의록</span>
+      <span class="sub">검수 기준과 다음 할 일 정리</span>
+      <span class="when">오늘</span>
+    </button>
+    <button class="row">
+      <span class="ico green"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#12A150" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66667H12.8333L16.5 7.33333V18.3333H6.41667V3.66667Z"/><path d="M12.8333 3.66667V7.33333H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></svg></span>
+      <span class="title">주말 등산 준비</span>
+      <span class="sub">물 두 병, 간식, 바람막이 챙기기</span>
+      <span class="when">어제</span>
+    </button>
+  </section>
+
+  <section class="card recent">
+    <div class="card-head">
+      <span class="l">최근 메모</span>
+      <span class="more">전체 보기
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="#8B95A1" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </div>
+    <button class="row long">
+      <span class="ico pink"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#E5397A" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66667H12.8333L16.5 7.33333V18.3333H6.41667V3.66667Z"/><path d="M12.8333 3.66667V7.33333H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></svg></span>
+      <span class="title">장보기 목록</span>
+      <span class="sub">우유, 계란, 사과, 커피 원두, 식빵, 올리브오일, 파스타면, 토마토소스, 양파, 대파, 마늘, 두부, 닭가슴살, 샐러드 채소, 요거트, 바나나, 세제, 휴지까지 이번 주에 한꺼번에 사기</span>
+      <span class="when">오늘</span>
+    </button>
+    <button class="row">
+      <span class="ico orange"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#F76808" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66667H12.8333L16.5 7.33333V18.3333H6.41667V3.66667Z"/><path d="M12.8333 3.66667V7.33333H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></svg></span>
+      <span class="title">앱 아이콘 아이디어</span>
+      <span class="sub">메모지 모서리가 접힌 모양</span>
+      <span class="when">오늘</span>
+    </button>
+    <button class="row">
+      <span class="ico green"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#12A150" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66667H12.8333L16.5 7.33333V18.3333H6.41667V3.66667Z"/><path d="M12.8333 3.66667V7.33333H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></svg></span>
+      <span class="title">읽을 책</span>
+      <span class="sub">디자인 시스템 책 두 권</span>
+      <span class="when">어제</span>
+    </button>
+  </section>
+
+  <button class="cta">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4.16667V15.8333M4.16667 10H15.8333" stroke="#fff" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    새 메모 쓰기
+  </button>
+</div>
+</body>
+</html>

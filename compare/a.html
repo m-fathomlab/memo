@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>메모 홈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #3182F6;
+    --surface-page: #F2F4F6;
+    --surface-card: #FFFFFF;
+    --text-primary: #192028;
+    --text-secondary: #4E5968;
+    --text-muted: #8B95A1;
+    --text-on-primary: #FFFFFF;
+    --blue-soft: #E8F3FF;
+    --green-soft: #E3F8EC;
+    --orange-soft: #FFF1E5;
+    --pink-soft: #FFEAF1;
+    --space-4: 4px; --space-8: 8px; --space-16: 16px; --space-20: 20px; --space-24: 24px; --space-34: 34px; --space-64: 64px;
+    --radius-sm: 12px; --radius-md: 16px; --radius-xl: 24px; --radius-full: 999px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--surface-page); }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; border: 0; background: none; color: inherit; cursor: pointer; }
+  svg { display: block; flex: none; }
+
+  /* text styles */
+  .t-heading-xl { font-size: 28px; line-height: 38px; font-weight: 700; letter-spacing: -0.8px; }
+  .t-title-md   { font-size: 17px; line-height: 24px; font-weight: 700; letter-spacing: -0.3px; }
+  .t-label-md   { font-size: 15px; line-height: 22px; font-weight: 700; letter-spacing: -0.2px; }
+  .t-body-sm    { font-size: 14px; line-height: 20px; font-weight: 400; letter-spacing: -0.1px; }
+  .t-caption-md { font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: -0.2px; }
+  .t-caption-sm { font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: 0; }
+  .t-button-md  { font-size: 17px; line-height: 24px; font-weight: 700; letter-spacing: -0.2px; }
+
+  .screen {
+    width: 100%;
+    max-width: 390px;
+    min-height: 100vh;
+    min-height: max(100vh, 844px);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    padding: var(--space-64) var(--space-16) var(--space-34);
+    background: var(--surface-page);
+  }
+  .main { flex: 1; display: flex; flex-direction: column; gap: var(--space-16); }
+
+  .header { display: flex; flex-direction: column; gap: var(--space-8); padding: 0 var(--space-8); }
+  .header .date { color: var(--text-muted); }
+  .header .title { color: var(--text-primary); }
+  .header .title .accent { color: var(--primary); }
+
+  .filter { display: flex; gap: var(--space-8); padding: 0 var(--space-4); }
+  .chip {
+    height: 36px; padding: 0 var(--space-16);
+    display: inline-flex; align-items: center;
+    border-radius: var(--radius-full);
+    background: var(--surface-card); color: var(--text-secondary);
+  }
+  .chip[aria-pressed="true"] { background: var(--primary); color: var(--text-on-primary); }
+
+  .card {
+    background: var(--surface-card);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8) 0;
+  }
+  .card-header {
+    height: 40px; display: flex; align-items: center; gap: var(--space-4);
+    padding: 12px var(--space-16) var(--space-4) var(--space-20);
+  }
+  .card-header .title { flex: 1; color: var(--text-primary); }
+  .card-header .action { display: inline-flex; align-items: center; gap: var(--space-4); color: var(--text-muted); }
+
+  .memo {
+    height: 72px; display: flex; align-items: center; gap: var(--space-16);
+    padding: 12px var(--space-20);
+    width: 100%; text-align: left;
+  }
+  .memo .tile {
+    width: 44px; height: 44px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center; flex: none;
+  }
+  .memo .tile.blue   { background: var(--blue-soft); }
+  .memo .tile.green  { background: var(--green-soft); }
+  .memo .tile.orange { background: var(--orange-soft); }
+  .memo .tile.pink   { background: var(--pink-soft); }
+  .memo .content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+  .memo .content .m-title { color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .memo .content .m-preview { color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .memo .m-date { color: var(--text-muted); }
+  .memo.long { height: auto; min-height: 72px; align-items: flex-start; }
+  .memo.long .tile { margin-top: 2px; }
+  .memo.long .m-date { margin-top: 15px; }
+  .memo.long .content .m-preview { white-space: normal; overflow: visible; text-overflow: clip; }
+
+  .btn-primary {
+    height: 56px; width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: var(--space-8);
+    padding: 0 var(--space-24);
+    border-radius: var(--radius-md);
+    background: var(--primary); color: var(--text-on-primary);
+  }
+</style>
+</head>
+<body>
+<!-- 아이콘: 시안의 SVG를 그대로 사용 (색만 stroke로 지정) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="note-blue" viewBox="0 0 22 22" fill="none"><g stroke="#3182F6" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66666H12.8333L16.5 7.33332V18.3333H6.41667V3.66666Z"/><path d="M12.8333 3.66666V7.33332H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></g></symbol>
+    <symbol id="note-green" viewBox="0 0 22 22" fill="none"><g stroke="#12A150" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66666H12.8333L16.5 7.33332V18.3333H6.41667V3.66666Z"/><path d="M12.8333 3.66666V7.33332H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></g></symbol>
+    <symbol id="note-orange" viewBox="0 0 22 22" fill="none"><g stroke="#F76808" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66666H12.8333L16.5 7.33332V18.3333H6.41667V3.66666Z"/><path d="M12.8333 3.66666V7.33332H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></g></symbol>
+    <symbol id="note-pink" viewBox="0 0 22 22" fill="none"><g stroke="#E5397A" stroke-width="1.83333" stroke-linecap="round" stroke-linejoin="round"><path d="M6.41667 3.66666H12.8333L16.5 7.33332V18.3333H6.41667V3.66666Z"/><path d="M12.8333 3.66666V7.33332H16.5M9.16667 11H13.75M9.16667 14.6667H13.75"/></g></symbol>
+  </defs>
+</svg>
+
+<div class="screen">
+  <main class="main">
+    <header class="header">
+      <p class="date t-caption-md">10월 30일 금요일</p>
+      <h1 class="title t-heading-xl">오늘까지 메모를<br><span class="accent">128개</span> 남겼어요</h1>
+    </header>
+
+    <nav class="filter" aria-label="메모 분류">
+      <button class="chip t-label-md" aria-pressed="true">전체</button>
+      <button class="chip t-label-md" aria-pressed="false">업무</button>
+      <button class="chip t-label-md" aria-pressed="false">개인</button>
+      <button class="chip t-label-md" aria-pressed="false">아이디어</button>
+    </nav>
+
+    <section class="card" aria-label="고정한 메모">
+      <div class="card-header">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><g stroke="#3182F6" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.33334H10L9.4 5.80001L11.3333 8.00001H4.66667L6.6 5.80001L6 2.33334Z"/><path d="M8 8V13.3333"/></g></svg>
+        <h2 class="title t-label-md">고정한 메모</h2>
+      </div>
+      <button class="memo">
+        <span class="tile blue"><svg width="22" height="22"><use href="#note-blue"/></svg></span>
+        <span class="content"><span class="m-title t-title-md">디자인 리뷰 회의록</span><span class="m-preview t-body-sm">검수 기준과 다음 할 일 정리</span></span>
+        <span class="m-date t-caption-sm">오늘</span>
+      </button>
+      <button class="memo">
+        <span class="tile green"><svg width="22" height="22"><use href="#note-green"/></svg></span>
+        <span class="content"><span class="m-title t-title-md">주말 등산 준비</span><span class="m-preview t-body-sm">물 두 병, 간식, 바람막이 챙기기</span></span>
+        <span class="m-date t-caption-sm">어제</span>
+      </button>
+    </section>
+
+    <section class="card" aria-label="최근 메모">
+      <div class="card-header">
+        <h2 class="title t-label-md">최근 메모</h2>
+        <button class="action t-caption-md">전체 보기
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 4L10 8L6 12" stroke="#8B95A1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <button class="memo long">
+        <span class="tile pink"><svg width="22" height="22"><use href="#note-pink"/></svg></span>
+        <span class="content"><span class="m-title t-title-md">장보기 목록</span><span class="m-preview t-body-sm">우유, 계란, 사과, 커피 원두, 식빵, 올리브오일, 파스타면, 토마토소스, 양파, 대파, 마늘, 두부, 닭가슴살, 샐러드 채소, 요거트, 바나나, 세제, 휴지까지 이번 주에 한꺼번에 사기</span></span>
+        <span class="m-date t-caption-sm">오늘</span>
+      </button>
+      <button class="memo">
+        <span class="tile orange"><svg width="22" height="22"><use href="#note-orange"/></svg></span>
+        <span class="content"><span class="m-title t-title-md">앱 아이콘 아이디어</span><span class="m-preview t-body-sm">메모지 모서리가 접힌 모양</span></span>
+        <span class="m-date t-caption-sm">오늘</span>
+      </button>
+      <button class="memo">
+        <span class="tile green"><svg width="22" height="22"><use href="#note-green"/></svg></span>
+        <span class="content"><span class="m-title t-title-md">읽을 책</span><span class="m-preview t-body-sm">디자인 시스템 책 두 권</span></span>
+        <span class="m-date t-caption-sm">어제</span>
+      </button>
+    </section>
+  </main>
+
+  <button class="btn-primary t-button-md">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.16669V15.8334M4.16667 10H15.8333" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    새 메모 쓰기
+  </button>
+</div>
+</body>
+</html>
